@@ -122,16 +122,28 @@ class Superwar {
     // Check for fight
     isFight = () => {
         // Type your code here
+        {
+            return (this.players.filter(player => player.selected &&
+                player.strength > 0).length == 2) ? 'clash' : 'peace';
+        }
 
         // return  'clash' or 'peace';
     }
 
     // Fight
-    fight = () => {
-        // Filtered the selected players and calculate score
-        // Should return HTML element with score
-        // Type your code here
 
+    // Filtered the selected players and calculate score
+    // Should return HTML element with score
+    // Type your code here
+    fight = () => {
+        let fighters = this.players.filter(player => player.selected);
+        let resultStrength = Math.min(...fighters.map(p => p.strength));
+        fighters.forEach(player => {
+            player.selected = false;
+            player.strength -= resultStrength;
+            if (player.strength > 0)
+                player.wins += 1;
+        });
         if (this.checkWin() !== 'endure')
             setTimeout(() => this.announceWinner(score), 100);
     }
@@ -139,8 +151,8 @@ class Superwar {
     // Calculate score
     calculateScore = () => {
         // Calculate and return the total score of teams
-        // Type your code here
-
+        var sum = 0;
+        let score = this.score.reduce(score => (sum += score));
         return score;
     }
 
@@ -150,13 +162,24 @@ class Superwar {
         // If winner dosen't exists then return endure
         // Type your code here
 
-      return result;
+
+        let score = this.calculateScore();
+        document.getElementById('score').innerHTML =
+            score['hero'] + ' - ' + score['villain'];
+        this.viewPlayers();
+        if (this.checkWin() !== 'endure')
+            setTimeout(() => this.announceWinner(score), 100);
+        else {
+            return 'endure';
+        }
+        return result;
     }
 
     // Find total strength of a team
     totalStrength = (type) => {
         // Calculate and return the total strength of the team
         // Type your code here
+
 
         return strength;
     }
